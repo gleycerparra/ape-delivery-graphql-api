@@ -1,0 +1,30 @@
+{
+    "name": "shipp",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node --inspect=5858 -r ts-node/register ./src/server.ts",
+        "start:watch": "nodemon",
+        "build": "rimraf ./dist && tsc"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^13.13.4",
+        "nodemon": "^2.0.3",
+        "rimraf": "^3.0.2",
+        "ts-node": "^8.9.1",
+        "typescript": "^3.8.3"
+    },
+    "dependencies": {
+        "@types/dotenv": "^8.2.0",
+        "apollo-server": "^2.12.0",
+        "dotenv": "^8.2.0",
+        "graphql": "^15.0.0",
+        "graphql-cli": "^3.0.14",
+        "graphql-scalars": "^1.1.2",
+        "mongodb": "^3.5.7"
+    }
+}
