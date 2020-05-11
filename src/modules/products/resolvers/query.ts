@@ -1,4 +1,4 @@
-const books = [
+const products = [
     {
         title: 'Harry Potter and the Chamber of Secrets',
         author: 'J.K. Rowling',
@@ -10,5 +10,5 @@ const books = [
 ];
 
 export const Query = {
-    books: () => books,
+    products: () => products,
 }

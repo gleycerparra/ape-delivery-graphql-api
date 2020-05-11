@@ -1,5 +1,5 @@
-import { Query } from "./query";
-import { Book } from "./types/book";
-import { Mutation } from "./mutation";
+import { productTypeDefs } from './../modules/products/schema/index';
 
-export const typeDefs = [Query, Book, Mutation];
+export const typeDefs = [
+    ...productTypeDefs
+];
