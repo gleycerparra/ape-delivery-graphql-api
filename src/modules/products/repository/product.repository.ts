@@ -7,7 +7,7 @@ import { injectable } from "inversify";
 export class ProductRepository implements IProductRepository {
 
     add(product: Product): Promise<Product> {
-           return ProductModel.create({...product});
+        return ProductModel.create({ ...product });
     }
     exists(t: Product): Promise<boolean> {
         throw new Error("Method not implemented.");
@@ -18,5 +18,5 @@ export class ProductRepository implements IProductRepository {
     getById(id: string): Promise<Product> {
         throw new Error("Method not implemented.");
     }
-    
+
 }

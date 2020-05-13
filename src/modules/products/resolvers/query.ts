@@ -1,11 +1,11 @@
 const products = [
     {
-        title: 'Harry Potter and the Chamber of Secrets',
-        author: 'J.K. Rowling',
+        name: 'Harry Potter and the Chamber of Secrets',
+        code: 'J.K. Rowling',
     },
     {
-        title: 'Jurassic Park',
-        author: 'Michael Crichton',
+        name: 'Jurassic Park',
+        code: 'Michael Crichton',
     },
 ];
 

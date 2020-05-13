@@ -1,8 +1,7 @@
 import { ProductRepository } from './repository/product.repository';
 import { Product } from './product';
-import RepositoryTypes from '@app/core/repository.types';
 import { inject } from 'inversify';
-
+import RepositoryTypes from '@app/core/repository.types';
 
 export class ProductService {
     

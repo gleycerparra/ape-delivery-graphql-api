@@ -1,8 +1,6 @@
-import { prop, Ref, mongoose } from '@typegoose/typegoose';
+import { prop, arrayProp } from '@typegoose/typegoose';
 
-class ProductAttributes {
-    @prop()
-    _id: mongoose.Types.ObjectId;
+class ProductAttribute {
 
     @prop()
     name: string;
@@ -12,8 +10,6 @@ class ProductAttributes {
 }
 
 export class Product {
-    @prop()
-    _id: mongoose.Types.ObjectId;
 
     @prop()
     name: string;
@@ -36,8 +32,7 @@ export class Product {
     @prop()
     warrantyTerms?: string;
 
-    @prop({ ref: ProductAttributes })
-    productAttributes?: Ref<ProductAttributes[]>;
+    @arrayProp({ items: ProductAttribute, _id: false }) productAttributes: ProductAttribute[];
 }
 
 

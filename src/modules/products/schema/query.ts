@@ -2,7 +2,7 @@ import { gql } from "apollo-server";
 
 export const ProductQuery = gql`
 
-type Query {
+extend type Query {
     """
     Returns all products.
     """

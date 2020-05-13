@@ -9,7 +9,7 @@ let productService = container.get<ProductService>(RepositoryTypes.IProductRepos
 export const Mutation = {
   createProduct: async (parent: any, { input }: { input: Product }
   ) => {
-    console.log('input', input);
     return productService.add(input);
   },
+  
 }
