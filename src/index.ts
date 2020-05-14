@@ -12,9 +12,12 @@ import { ProductRepository } from './modules/products/repository/product.reposit
 
 MongooseProvider.connect();
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers
+});
 
 // The `listen` method launches a web server.
 server.listen(environment.port).then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+    console.log(`🚀 Server ready at ${url}`);
 });

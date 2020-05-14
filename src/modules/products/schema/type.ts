@@ -2,7 +2,7 @@ import { gql } from "apollo-server";
 
 export const ProductType = gql`
 
-type Product {
+type Product{
     name: String!
     price: Float!
     code: String!
@@ -13,8 +13,7 @@ type Product {
     description: String
 }
 
-interface ProductAttribute {
-    id: ID!
+type ProductAttribute {
     name: String!
-    description: String
+    description: String!
 }`

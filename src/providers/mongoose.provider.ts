@@ -5,13 +5,18 @@ export class MongooseProvider {
 
     static async connect() {
         try {
-            await mongoose.connect(environment.mongoDb.url, {
+            const connection = await mongoose.connect(environment.mongoDb.url, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             })
 
-        } catch {
+            if (connection) {
+                console.log(`🐘 Connected to MongoDB`);
+            }
+
+        } catch (error) {
             console.log('Connection error');
+            console.log(error);
         }
     }
 

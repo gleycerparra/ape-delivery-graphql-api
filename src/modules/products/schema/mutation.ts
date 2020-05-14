@@ -13,7 +13,7 @@ input ProductAttributeInput {
     description: String!
 }
 
-input ProductInput {
+input CreateProductInput {
     """
     Product name.
     """
@@ -47,10 +47,53 @@ input ProductInput {
     """
     description: String
 }
+
+input UpdateProductInput {
+    """
+    Product name.
+    """
+    name: String
+    """
+    Product code.
+    """
+    code: String
+    """
+    Product price.
+    """
+    price: Float
+    """
+    Product images.
+    """
+    images: [String]
+    """
+    Product isActive.
+    """
+    isActive: Boolean
+    """
+    Product productAttributes.
+    """
+    productAttributes: [ProductAttributeInput!]
+    """
+    Product warrantyTerms.
+    """
+    warrantyTerms: String
+    """
+    Product description.
+    """
+    description: String
+}
   
 extend type Mutation {
     """
     Create a product.
     """
-    createProduct(input: ProductInput!): Product!
+    createProduct(product: CreateProductInput!): Product!
+    """
+    Update a product.
+    """
+    updateProduct(id: ID!, product: UpdateProductInput!): Product!
+    """
+    delete a product.
+    """
+    deleteProduct(id: ID!): Product!
 }`
