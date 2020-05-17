@@ -1,14 +1,21 @@
-import { IProductRepository } from "./product.interface";
-import { Product } from "../product";
-import { ProductModel } from "../product.model";
-import { injectable } from "inversify";
-import { DocumentType, mongoose } from "@typegoose/typegoose";
-
+import { QueryParams } from '../../../core/query-params';
+import { IProductRepository } from './product.interface';
+/* import { Product } from '../product'; */
+import { injectable } from 'inversify';
+import { DocumentType, mongoose } from '@typegoose/typegoose';
+import { ProductModel } from '../product.model';
+import { Product } from '../product';
 @injectable()
 export class ProductRepository implements IProductRepository {
 
-    getAll(): Promise<DocumentType<Product>[]> {
-        return ProductModel.find({}).exec();
+    getAll(queryParams?: QueryParams<Product>): Promise<DocumentType<Product>[]> {
+        queryParams = new QueryParams(queryParams);
+        return ProductModel.find(
+            queryParams.searchText
+        )
+            .skip(queryParams.skip)
+            .limit(queryParams.limit)
+            .exec();
     }
 
     async get(id: string): Promise<DocumentType<Product> | null> {

@@ -1,4 +1,5 @@
-import { prop, arrayProp } from '@typegoose/typegoose';
+import { prop, arrayProp, index } from '@typegoose/typegoose';
+import { Schema } from 'mongoose';
 
 class ProductAttribute {
 
@@ -8,16 +9,15 @@ class ProductAttribute {
     @prop()
     description?: string;
 }
-
 export class Product {
 
-    @prop()
+    @prop({ index: true })
     name: string;
 
     @prop()
     price: number;
 
-    @prop()
+    @prop({ index: true })
     code: string;
 
     @prop()
