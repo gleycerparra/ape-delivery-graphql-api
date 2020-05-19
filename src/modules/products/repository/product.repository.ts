@@ -1,41 +1,53 @@
-import { FormatQueryParams } from '@app/helpers/formatQueryParams';
+import { QueryParams } from '@app/helpers/queryParams';
 import { IProductRepository } from './product.interface';
-/* import { Product } from '../product'; */
 import { injectable } from 'inversify';
 import { DocumentType, mongoose } from '@typegoose/typegoose';
 import { ProductModel } from '../product.model';
 import { Product } from '../product';
-import { getPaginationMetadata } from '@app/helpers/getPaginationMetadata';
+import { PageInfo } from '@app/helpers/pageInfo';
+import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
+import { DocumentQuery } from 'mongoose';
 @injectable()
 export class ProductRepository implements IProductRepository {
 
-    async getAll(queryParams?: FormatQueryParams<Product>): Promise<DocumentType<any>> {
-        queryParams = new FormatQueryParams(queryParams);
-        let paginationMetadata = {};
-        let products = ProductModel.find({});
+    products: DocumentQuery<DocumentType<Product>[], DocumentType<Product>, {}>;
+
+    async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
+        queryParams = new QueryParams(queryParams);
+        let paginationMetadata: PageInfoMetadata | null = null;
+        this.getProducts();
 
         if (queryParams.searchText) {
-            products = products.find(
+            this.products = this.products.find(
                 queryParams.searchText
             );
         }
 
-        if (queryParams.paginate && queryParams.skip && queryParams.limit) {
-            paginationMetadata = await getPaginationMetadata(products, queryParams.skip, queryParams.limit);
+        if (queryParams.paginate && typeof queryParams.skip !== undefined && queryParams.limit) {
+            const pageInfo = new PageInfo(this.products, queryParams.skip, queryParams.limit);
+            paginationMetadata = await pageInfo.getPageInfo();
         }
 
-        const query = await products.find(
+        const query = await this.makeQuery(queryParams);
+
+        return {
+            data: [...query],
+            pageInfo: paginationMetadata
+        };
+    }
+
+    getProducts(): void {
+        this.products = ProductModel.find({});
+    }
+
+    async makeQuery(queryParams: QueryParams<Product>) {
+        return await this.products.find(
             queryParams.searchText
         )
             .skip(queryParams.skip)
             .limit(queryParams.limit)
             .sort(queryParams.sort)
             .exec();
-
-        return {
-            data: [...query],
-            pageInfo: { ...paginationMetadata }
-        };
     }
 
     async get(id: string): Promise<DocumentType<Product> | null> {

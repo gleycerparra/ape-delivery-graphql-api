@@ -1,4 +1,4 @@
-export class FormatQueryParams<T> {
+export class QueryParams<T> {
 
     skip: number;
     limit: number;
@@ -7,7 +7,7 @@ export class FormatQueryParams<T> {
     searchText: string | any;
     paginate: boolean;
 
-    constructor(queryParams?: FormatQueryParams<T>) {
+    constructor(queryParams?: QueryParams<T>) {
         this.skip = queryParams?.skip || 0;
         this.limit = queryParams?.limit || 25;
         this.sort = queryParams?.sort || {};
