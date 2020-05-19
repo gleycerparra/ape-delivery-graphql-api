@@ -1,13 +1,17 @@
-export class QueryParams<T> {
+export class FormatQueryParams<T> {
 
     skip: number;
     limit: number;
+    sort: Sort<T>;
     fields: [keyof T];
     searchText: string | any;
+    paginate: boolean;
 
-    constructor(queryParams?: QueryParams<T>) {
+    constructor(queryParams?: FormatQueryParams<T>) {
         this.skip = queryParams?.skip || 0;
         this.limit = queryParams?.limit || 25;
+        this.sort = queryParams?.sort || {};
+        this.paginate = queryParams?.paginate || true;
 
         if (queryParams?.fields && queryParams.searchText) {
            this.searchText = this.setTextSearch(queryParams.fields, queryParams.searchText);
@@ -23,10 +27,17 @@ export class QueryParams<T> {
             })
         }
 
-        console.log(query);
-
         return {
             $or: query
         }
     }
+
+}
+type Sort<T> = {
+    [K in keyof T]?: SortDirection;
+};
+
+enum SortDirection {
+    asc = 1,
+    desc = -1
 }

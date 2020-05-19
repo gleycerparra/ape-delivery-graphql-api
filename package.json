@@ -22,14 +22,17 @@
     "dependencies": {
         "@typegoose/typegoose": "^7.0.0",
         "@types/dotenv": "^8.2.0",
+        "@types/graphql-type-json": "^0.3.2",
         "apollo-server": "^2.12.0",
         "dotenv": "^8.2.0",
         "graphql": "^15.0.0",
         "graphql-cli": "^3.0.14",
         "graphql-scalars": "^1.1.2",
+        "graphql-type-json": "^0.3.1",
         "inversify": "^5.0.1",
         "mongodb": "^3.5.7",
         "mongoose": "^5.9.11",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "tsconfig-paths": "^3.9.0"
     }
 }
