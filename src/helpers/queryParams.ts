@@ -33,6 +33,7 @@ export class QueryParams<T> {
     }
 
 }
+
 type Sort<T> = {
     [K in keyof T]?: SortDirection;
 };

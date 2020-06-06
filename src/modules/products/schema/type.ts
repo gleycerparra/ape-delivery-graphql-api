@@ -11,6 +11,8 @@ type Product{
     productAttributes: [ProductAttribute]!
     warrantyTerms: String
     description: String
+    createdAt: String
+	updatedAt: String
 }
 
 type ProductAttribute {
