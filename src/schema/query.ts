@@ -3,6 +3,9 @@ import { gql } from "apollo-server";
 export const Query = gql`
 
 scalar JSON
+scalar DateTime
+scalar Time
+scalar Date
 
 type Query {
     _empty: String

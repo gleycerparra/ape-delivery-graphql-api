@@ -42,8 +42,9 @@ export class ProductRepository implements IProductRepository {
 
     async makeQuery(queryParams: QueryParams<Product>) {
         return await this.products.find(
-            queryParams.searchText
+            queryParams.searchText,
         )
+            .where('deletedAt').equals(null)
             .skip(queryParams.skip)
             .limit(queryParams.limit)
             .sort(queryParams.sort)
@@ -51,7 +52,9 @@ export class ProductRepository implements IProductRepository {
     }
 
     async get(id: string): Promise<DocumentType<Product> | null> {
-        return ProductModel.findOne({ _id: mongoose.Types.ObjectId(id) }).exec();
+        return ProductModel.findOne({ _id: mongoose.Types.ObjectId(id) })
+            .where('deletedAt').equals(null)
+            .exec();
     }
 
     add(product: Product): Promise<Product> {
@@ -62,9 +65,10 @@ export class ProductRepository implements IProductRepository {
         return ProductModel.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, product, { new: true }).exec();
     }
 
-    delete(id: string): Promise<DocumentType<Product> | null> {
-        return ProductModel.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) }).exec();
+    delete(id: string): any/*  Promise<DocumentType<Product> | null> */ {
+        return ProductModel.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+            deletedAt: new Date()
+        }).exec();
     }
-
 
 }

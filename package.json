@@ -12,7 +12,9 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/graphql-iso-date": "^3.3.3",
         "@types/mongoose": "^5.7.14",
+        "@types/mongoose-delete": "^0.5.1",
         "@types/node": "^13.13.4",
         "nodemon": "^2.0.3",
         "rimraf": "^3.0.2",
@@ -27,6 +29,7 @@
         "dotenv": "^8.2.0",
         "graphql": "^15.0.0",
         "graphql-cli": "^3.0.14",
+        "graphql-iso-date": "^3.6.1",
         "graphql-scalars": "^1.1.2",
         "graphql-type-json": "^0.3.1",
         "inversify": "^5.0.1",
