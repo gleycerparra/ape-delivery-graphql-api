@@ -1,20 +1,21 @@
-import { ProductService } from './modules/products/product.service';
+import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
 import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './schema';
 import resolvers from './modules/products/resolvers';
 import { MongooseProvider } from './providers/mongoose.provider';
-import { container } from './inversify.config';
-import { IProductRepository } from './modules/products/repository/product.interface';
-import RepositoryTypes from './core/repository.types';
-import { ProductRepository } from './modules/products/repository/product.repository';
-
-
+import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 MongooseProvider.connect();
 
-const server = new ApolloServer({ 
-    typeDefs, 
-    resolvers
+const server = new ApolloServer({
+    typeDefs,
+    resolvers: {
+        Date: GraphQLDate,
+        Time: GraphQLTime,
+        DateTime: GraphQLDateTime,
+        JSON: GraphQLJSON,
+        ...resolvers
+    }
 });
 
 // The `listen` method launches a web server.

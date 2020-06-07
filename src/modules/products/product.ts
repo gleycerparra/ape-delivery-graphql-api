@@ -6,33 +6,42 @@ class ProductAttribute {
     name: string;
 
     @prop()
-    description?: string;
+    position: number;
 }
+class ProductImage {
 
+    @prop()
+    url: string;
+
+    @prop()
+    description: string;
+}
 export class Product {
 
-    @prop()
+    @prop({ index: true, required: true })
     name: string;
 
-    @prop()
+    @prop({ required: true })
     price: number;
 
-    @prop()
-    code: string;
+    @prop({ index: true, required: true })
+    sku: string;
 
-    @prop()
-    images: string[];
-
-    @prop()
+    @prop({ required: true })
     isActive: boolean;
 
-    @prop()
+    @prop({ required: true })
     description?: string;
 
     @prop()
     warrantyTerms?: string;
 
+    @prop({ default: null })
+    deletedAt?: Date;
+
     @arrayProp({ items: ProductAttribute, _id: false }) productAttributes: ProductAttribute[];
+
+    @arrayProp({ items: ProductImage, _id: false }) images: ProductImage[];
 }
 
 

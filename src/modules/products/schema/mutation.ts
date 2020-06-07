@@ -13,15 +13,26 @@ input ProductAttributeInput {
     description: String!
 }
 
+input ProductImageInput {
+    """
+    Product attribute name.
+    """
+    url: String!
+    """
+    Product attribute description.
+    """
+    position: Float!
+}
+
 input CreateProductInput {
     """
     Product name.
     """
     name: String!
     """
-    Product code.
+    Product sku.
     """
-    code: String!
+    sku: String!
     """
     Product price.
     """
@@ -29,7 +40,7 @@ input CreateProductInput {
     """
     Product images.
     """
-    images: [String]!
+    images: [ProductImageInput]!
     """
     Product isActive.
     """
@@ -54,9 +65,9 @@ input UpdateProductInput {
     """
     name: String
     """
-    Product code.
+    Product sku.
     """
-    code: String
+    sku: String
     """
     Product price.
     """
@@ -64,7 +75,7 @@ input UpdateProductInput {
     """
     Product images.
     """
-    images: [String]
+    images: [ProductImageInput]
     """
     Product isActive.
     """
@@ -72,7 +83,7 @@ input UpdateProductInput {
     """
     Product productAttributes.
     """
-    productAttributes: [ProductAttributeInput!]
+    productAttributes: [ProductAttributeInput]
     """
     Product warrantyTerms.
     """

@@ -1,10 +1,14 @@
-import { container } from '../../../inversify.config';
-import { ProductService } from '../product.service';
-import RepositoryTypes from '../../../core/repository.types'
+import { Product } from '../product';
+import { QueryParams } from '@app/helpers/queryParams';
+import { ProductRepository } from '../repository/product.repository';
 
-let productService = container.get<ProductService>(RepositoryTypes.IProductRepository);
+const productRepository = new ProductRepository();
+
+/* let productService = container.get<ProductService>(RepositoryTypes.IProductRepository); */
 
 export const Query = {
-    product: async (parent: any, { id }: { id: string }) => await productService.get(id),
-    products: async () => await productService.getAll(),
+    getProduct: async (parent: any, { id }: { id: string }) => await productRepository.get(id),
+    getProducts: async (parent: any, args: QueryParams<Product>) => {
+        return await productRepository.getAll(args);
+    },
 }
