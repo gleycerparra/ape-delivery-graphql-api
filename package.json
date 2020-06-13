@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node --inspect=5858 -r ts-node/register ./src/server.ts",
+        "start": "node -r ./tsconfig-paths-bootstrap.js dist/index.js",
         "start:dev": "nodemon",
         "build": "rimraf ./dist && tsc"
     },
