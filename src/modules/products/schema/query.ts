@@ -11,7 +11,7 @@ extend type Query {
     """
     Returns all products.
     """
-    getProducts(
+    products(
         paginate: Boolean,
         searchText: String, 
         skip: Int, 
@@ -22,6 +22,6 @@ extend type Query {
     """
     Returns a product.
     """
-    getProduct(id: ID!): Product
+    product(id: ID!): Product
 }
 `
