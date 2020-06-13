@@ -15,7 +15,9 @@ const server = new ApolloServer({
         DateTime: GraphQLDateTime,
         JSON: GraphQLJSON,
         ...resolvers
-    }
+    },
+    introspection: true,
+    playground: true,
 });
 
 // The `listen` method launches a web server.
