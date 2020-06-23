@@ -18,8 +18,8 @@ type Product{
 }
 
 type ProductImage {
-    url: String!
-    position: Float!
+    url: String
+    position: Float
 }
 
 type ProductAttribute {

@@ -23,12 +23,12 @@ export class ProductRepository implements IProductRepository {
             );
         }
 
-        const query = await this.makeQuery(queryParams);
-
-        if (queryParams.paginate && typeof queryParams.skip !== undefined && queryParams.limit) {
+        if (typeof queryParams.skip !== undefined && typeof queryParams.limit !== undefined) {
             const pageInfo = new PageInfo(this.products, queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
         }
+
+        const query = await this.makeQuery(queryParams);
 
         return {
             data: [...query],

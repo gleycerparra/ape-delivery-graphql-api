@@ -3,18 +3,15 @@ export class QueryParams<T> {
     skip: number;
     limit: number;
     sort: Sort<T>;
-    fields: [keyof T];
-    searchText: string | any;
-    paginate: boolean;
+    searchText: SearchText<T> | any;
 
     constructor(queryParams?: QueryParams<T>) {
         this.skip = queryParams?.skip || 0;
         this.limit = queryParams?.limit || 25;
         this.sort = queryParams?.sort || {};
-        this.paginate = queryParams?.paginate || true;
 
-        if (queryParams?.fields && queryParams.searchText) {
-           this.searchText = this.setTextSearch(queryParams.fields, queryParams.searchText);
+        if (queryParams?.searchText?.fields && queryParams?.searchText?.text) {
+           this.searchText = this.setTextSearch(queryParams.searchText.fields, queryParams.searchText.text);
         }
     }
 
@@ -32,6 +29,11 @@ export class QueryParams<T> {
         }
     }
 
+}
+
+interface SearchText<T> {
+    fields: [keyof T];
+    text: string | any;
 }
 
 type Sort<T> = {
