@@ -8,20 +8,10 @@ import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 import validateTokenMiddleware from './middlewares/validate-token.middleware';
 import express from 'express';
 import errorMiddleware from './middlewares/error.middleware';
-import cors from 'cors';
 
 MongooseProvider.connect();
 
 const app = express();
-
-const corsOptions = {
-    origin: [`${environment.port}`],
-    credentials: true,
-  };
-  app.use(cors(corsOptions));
-
-app.use(validateTokenMiddleware);
-app.use(errorMiddleware);
 
 const server = new ApolloServer({
     typeDefs,
@@ -32,20 +22,11 @@ const server = new ApolloServer({
         JSON: GraphQLJSON,
         ...resolvers
     },
-    playground: {
-        settings: {
-            'request.credentials': 'same-origin',
-        },
-    },
-/*     context: ({ req }) => {
-
-        const token = req.headers.authorization || '';
-
-        return { user };
-    }, */
+    context: (req: any) => req.req.user,
 });
 
-
+app.use(validateTokenMiddleware);
+app.use(errorMiddleware);
 
 server.applyMiddleware({ app });
 // The `listen` method launches a web server.
