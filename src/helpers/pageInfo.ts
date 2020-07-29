@@ -13,10 +13,11 @@ export class PageInfo {
     }
 
     async getPageInfo(): Promise<PageInfoMetadata> {
+
         const total = await this.query.countDocuments().exec();
 
         return {
-            from: this.skip === 0 ? 1 : this.skip,
+            from: (this.skip === 0 && total > 0) ? 1 : this.skip,
             to: this.skip + this.limit < total ? this.skip + this.limit : total,
             total,
             hasNextPage: this.limit + this.skip < total,

@@ -7,8 +7,13 @@ scalar DateTime
 scalar Time
 scalar Date
 
-type Query {
+""" type Query {
     _empty: String
+} """
+
+input SearchText {
+    fields: [String]!
+    text: String!
 }
 
 type PageInfo {

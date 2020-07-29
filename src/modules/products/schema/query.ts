@@ -7,16 +7,15 @@ type ProductConnection {
     pageInfo: PageInfo
 }
 
-extend type Query {
+type Query {
     """
     Returns all products.
     """
     products(
         paginate: Boolean,
-        searchText: String, 
+        searchText: SearchText, 
         skip: Int, 
         limit: Int,
-        fields: [String]
         sort: JSON,
         ): ProductConnection
     """

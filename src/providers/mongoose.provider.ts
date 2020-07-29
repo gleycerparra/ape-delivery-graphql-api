@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { environment } from '../environment';
 
 export class MongooseProvider {
@@ -7,7 +7,8 @@ export class MongooseProvider {
         try {
             const connection = await mongoose.connect(environment.mongoDb.url, {
                 useNewUrlParser: true,
-                useUnifiedTopology: true
+                useUnifiedTopology: true,
+                useCreateIndex: true
             })
 
             if (connection) {
