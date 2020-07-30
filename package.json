@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon",
+        "start": "node --inspect=5858 -r ts-node/register ./src/server.ts",
+        "start:dev": "nodemon",
         "build": "rimraf ./dist && tsc"
     },
     "keywords": [],
