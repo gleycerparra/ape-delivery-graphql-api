@@ -6,12 +6,12 @@ import resolvers from './modules/products/resolvers';
 import { MongooseProvider } from './providers/mongoose.provider';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 import validateTokenMiddleware from './middlewares/validate-token.middleware';
-import express from 'express';
 import errorMiddleware from './middlewares/error.middleware';
+import express = require('express');
 
 MongooseProvider.connect();
 
-const app = express();
+const app: express.Application = express();
 
 const server = new ApolloServer({
     typeDefs,
