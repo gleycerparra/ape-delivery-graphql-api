@@ -21,7 +21,7 @@ const options = {
 
 
 export async function isTokenValid(token) {
-    if (token) {
+    if (token && token.includes('Bearer ')) {
         const bearerToken = token.split(' ');
 
         const result = new Promise((resolve, reject) => {

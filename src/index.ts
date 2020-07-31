@@ -6,9 +6,7 @@ import resolvers from './modules/products/resolvers';
 import { MongooseProvider } from './providers/mongoose.provider';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 import { isTokenValid } from './helpers/verify-token';
-
 MongooseProvider.connect();
-
 
 const server = new ApolloServer({
     typeDefs,
@@ -24,21 +22,24 @@ const server = new ApolloServer({
     context: async ({ req }) => {
         // simple auth check on every request
         const token = req.headers.authorization;
-        const result: any = await isTokenValid(token);
+        if (token && token.includes('Bearer ')) {
+            const result: any = await isTokenValid(token);
 
-        if (result.error) {
+            if (result.error) {
+                throw new AuthenticationError('Unauthorized');
+            }
+
+            return {
+                user: result.user.decoded
+            }
+        }
+        else {
             throw new AuthenticationError('Unauthorized');
         }
-
-        return {
-            user: result.user.decoded
-        }
-
-
     },
 });
 
 // The `listen` method launches a web server.
-server.listen(environment.port, () => {
-    console.log(`🚀 Server ready at port ${environment.port}`);
+server.listen(environment.port).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`);
 });
