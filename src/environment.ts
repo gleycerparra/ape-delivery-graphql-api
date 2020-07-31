@@ -13,7 +13,10 @@ interface Environment {
     url: string;
   };
   port: number | string;
-  validateTokenRoute: string;
+  auth0: {
+    audience: string;
+    issuer: string;
+  }
 }
 
 export const environment: Environment = {
@@ -26,5 +29,8 @@ export const environment: Environment = {
     url: process.env.MONGODB_URL as string,
   },
   port: process.env.PORT || defaultPort,
-  validateTokenRoute: process.env.VALIDATE_TOKEN_ROUTE as string
+  auth0: {
+    audience: process.env.AUTH0_AUDIENCE as string,
+    issuer: process.env.AUTH0_ISSUER as string
+  }
 };
