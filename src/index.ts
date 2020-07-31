@@ -1,17 +1,12 @@
 import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { typeDefs } from './schema';
 import resolvers from './modules/products/resolvers';
 import { MongooseProvider } from './providers/mongoose.provider';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
-import validateTokenMiddleware from './middlewares/validate-token.middleware';
-import errorMiddleware from './middlewares/error.middleware';
-import express = require('express');
-
+import { isTokenValid } from './helpers/verify-token';
 MongooseProvider.connect();
-
-const app: express.Application = express();
 
 const server = new ApolloServer({
     typeDefs,
@@ -22,14 +17,29 @@ const server = new ApolloServer({
         JSON: GraphQLJSON,
         ...resolvers
     },
-    context: (req: any) => req.req.user,
+    introspection: environment.apollo.introspection,
+    playground: environment.apollo.playground,
+    context: async ({ req }) => {
+        // simple auth check on every request
+        const token = req.headers.authorization;
+        if (token && token.includes('Bearer ')) {
+            const result: any = await isTokenValid(token);
+
+            if (result.error) {
+                throw new AuthenticationError('Unauthorized');
+            }
+
+            return {
+                user: result.user.decoded
+            }
+        }
+        else {
+            throw new AuthenticationError('Unauthorized');
+        }
+    },
 });
 
-app.use(validateTokenMiddleware);
-app.use(errorMiddleware);
-
-server.applyMiddleware({ app });
 // The `listen` method launches a web server.
-app.listen(environment.port, () => {
-    console.log(`🚀 Server ready at port ${environment.port}`);
+server.listen(environment.port).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`);
 });
