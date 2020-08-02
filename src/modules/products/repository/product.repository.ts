@@ -1,13 +1,11 @@
 import { QueryParams } from '@app/helpers/queryParams';
 import { IProductRepository } from './product.interface';
-import { injectable } from 'inversify';
 import { DocumentType, mongoose } from '@typegoose/typegoose';
 import { ProductModel } from '../product.model';
 import { Product } from '../product';
 import { PageInfo } from '@app/helpers/pageInfo';
 import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
 import { DocumentQuery } from 'mongoose';
-@injectable()
 export class ProductRepository implements IProductRepository {
 
     products: DocumentQuery<DocumentType<Product>[], DocumentType<Product>, {}>;
