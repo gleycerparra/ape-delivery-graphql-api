@@ -1,10 +1,5 @@
 import { Product } from '../product';
 import { ProductRepository } from '../repository/product.repository';
-/* import { container } from '../../../inversify.config';
-import { ProductService } from '../product.service';
-import RepositoryTypes from '../../../core/repository.types'
-
-let productService = container.get<ProductService>(RepositoryTypes.IProductRepository); */
 
 const productRepository = new ProductRepository();
 

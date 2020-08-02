@@ -20,7 +20,7 @@ const server = new ApolloServer({
     introspection: environment.apollo.introspection,
     playground: environment.apollo.playground,
     context: async ({ req }) => {
-        // simple auth check on every request
+        
         const token = req.headers.authorization;
         if (token && token.includes('Bearer ')) {
             const result: any = await isTokenValid(token);
