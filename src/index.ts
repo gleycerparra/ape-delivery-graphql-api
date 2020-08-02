@@ -24,13 +24,14 @@ const server = new ApolloServer({
         const token = req.headers.authorization;
         if (token && token.includes('Bearer ')) {
             const result: any = await isTokenValid(token);
+            console.log('result', result);
 
             if (result.error) {
                 throw new AuthenticationError('Unauthorized');
             }
 
             return {
-                user: result.user.decoded
+                user: result.decoded
             }
         }
         else {
