@@ -1,5 +1,5 @@
-import { Product } from '../product';
 import { ProductRepository } from '../repository/product.repository';
+import { Product } from '../interfaces/product';
 
 const productRepository = new ProductRepository();
 

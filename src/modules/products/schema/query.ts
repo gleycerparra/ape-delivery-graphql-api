@@ -12,7 +12,6 @@ type Query {
     Returns all products.
     """
     products(
-        paginate: Boolean,
         searchText: SearchText, 
         skip: Int, 
         limit: Int,

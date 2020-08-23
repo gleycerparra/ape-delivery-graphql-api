@@ -19,7 +19,7 @@ const server = new ApolloServer({
     },
     introspection: environment.apollo.introspection,
     playground: environment.apollo.playground,
-    context: async ({ req }) => {
+ /*    context: async ({ req }) => {
         
         const token = req.headers.authorization;
         if (token && token.includes('Bearer ')) {
@@ -36,7 +36,7 @@ const server = new ApolloServer({
         else {
             throw new AuthenticationError('Unauthorized');
         }
-    },
+    }, */
 });
 
 // The `listen` method launches a web server.

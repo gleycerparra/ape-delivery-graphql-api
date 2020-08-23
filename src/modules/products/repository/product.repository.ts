@@ -1,14 +1,13 @@
 import { QueryParams } from '@app/helpers/queryParams';
 import { IProductRepository } from './product.interface';
-import { DocumentType, mongoose } from '@typegoose/typegoose';
-import { ProductModel } from '../product.model';
-import { Product } from '../product';
+import * as mongoose from 'mongoose';
 import { PageInfo } from '@app/helpers/pageInfo';
 import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
-import { DocumentQuery } from 'mongoose';
+import { ProductModel } from '../product';
+import { Product } from '../interfaces/product';
 export class ProductRepository implements IProductRepository {
 
-    products: DocumentQuery<DocumentType<Product>[], DocumentType<Product>, {}>;
+    products;
 
     async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
         queryParams = new QueryParams(queryParams);
@@ -49,21 +48,21 @@ export class ProductRepository implements IProductRepository {
             .exec();
     }
 
-    async get(id: string): Promise<DocumentType<Product> | null> {
+    async get(id: string) {
         return ProductModel.findOne({ _id: mongoose.Types.ObjectId(id) })
             .where('deletedAt').equals(null)
             .exec();
     }
 
-    add(product: Product): Promise<Product> {
+    add(product: Product): Promise<mongoose.Document> {
         return ProductModel.create({ ...product });
     }
 
-    update(id: string, product: Product): Promise<DocumentType<Product> | null> {
+    update(id: string, product: Product): Promise<mongoose.Document> {
         return ProductModel.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, product, { new: true }).exec();
     }
 
-    delete(id: string): any/*  Promise<DocumentType<Product> | null> */ {
+    delete(id: string): Promise<mongoose.Document> {
         return ProductModel.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
             deletedAt: new Date()
         }).exec();
