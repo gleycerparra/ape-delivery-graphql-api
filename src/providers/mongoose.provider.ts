@@ -8,7 +8,8 @@ export class MongooseProvider {
             const connection = await mongoose.connect(environment.mongoDb.url, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
-                useCreateIndex: true
+                useCreateIndex: true,
+                useFindAndModify: false
             })
 
             if (connection) {

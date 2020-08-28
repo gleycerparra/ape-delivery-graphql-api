@@ -2,9 +2,9 @@ import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
 import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { typeDefs } from './schema';
-import resolvers from './modules/products/resolvers';
 import { MongooseProvider } from './providers/mongoose.provider';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
+import { RProducts, RCategories } from './resolvers'
 import { isTokenValid } from './helpers/verify-token';
 MongooseProvider.connect();
 
@@ -15,7 +15,8 @@ const server = new ApolloServer({
         Time: GraphQLTime,
         DateTime: GraphQLDateTime,
         JSON: GraphQLJSON,
-        ...resolvers
+        ...RProducts,
+        ...RCategories
     },
     introspection: environment.apollo.introspection,
     playground: environment.apollo.playground,
