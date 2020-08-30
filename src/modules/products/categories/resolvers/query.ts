@@ -1,14 +1,13 @@
-import { QueryParams } from '@app/helpers/queryParams';
+import { QueryParams } from '@app/helpers/query-params';
 import Category from '../interfaces/category.interface';
 import CategoryRepository from '../repository/category.repository';
 
-const categoryRepository = new CategoryRepository();
 
 const Query = {
-    category: async (parent: any, { id }: { id: string }) => await categoryRepository.get(id),
+    category: async (_, { id }: { id: string }, { dataSources: { productCategories } }) => await productCategories.get(id),
 
-    categories: async (parent: any, args: QueryParams<Category>) => {
-        return await categoryRepository.getAll(args);
+    categories: async (_, args: QueryParams<Category>, { dataSources: { productCategories } }) => {
+        return await productCategories.getAll(args);
     }
 }
 

@@ -1,11 +1,13 @@
-import { QueryParams } from '@app/helpers/queryParams';
+import "reflect-metadata";
+import { QueryParams } from '@app/helpers/query-params';
 import { IProductRepository } from './product.interface';
 import * as mongoose from 'mongoose';
-import { PageInfo } from '@app/helpers/pageInfo';
-import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
-import { ProductModel } from '../product';
+import { PageInfo } from '@app/helpers/page-info';
+import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { Product } from '../interfaces/product';
-export class ProductRepository implements IProductRepository {
+import { MongoDataSource } from 'apollo-datasource-mongodb';
+
+export class ProductRepository extends MongoDataSource<Product> implements IProductRepository {
 
     products;
 
@@ -34,7 +36,7 @@ export class ProductRepository implements IProductRepository {
     }
 
     getProducts(): void {
-        this.products = ProductModel.find({});
+        this.products = this.model.find({});
     }
 
     async makeQuery(queryParams: QueryParams<Product>) {
@@ -49,21 +51,21 @@ export class ProductRepository implements IProductRepository {
     }
 
     async get(id: string) {
-        return ProductModel.findOne({ _id: mongoose.Types.ObjectId(id) })
+        return this.model.findOne({ _id: mongoose.Types.ObjectId(id) })
             .where('deletedAt').equals(null)
             .exec();
     }
 
     add(product: Product): Promise<mongoose.Document> {
-        return ProductModel.create({ ...product });
+        return this.model.create({ ...product });
     }
 
     update(id: string, product: Product): Promise<mongoose.Document> {
-        return ProductModel.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, product, { new: true }).exec();
+        return this.model.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, product, { new: true }).exec();
     }
 
     delete(id: string): Promise<mongoose.Document> {
-        return ProductModel.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+        return this.model.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
             deletedAt: new Date()
         }).exec();
     }

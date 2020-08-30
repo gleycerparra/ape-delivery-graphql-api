@@ -1,4 +1,4 @@
-import { PageInfoMetadata } from "./interfaces/pageInfo.interface";
+import { PageInfoMetadata } from "./interfaces/page-info.interface";
 import * as mongoose from 'mongoose';
 export interface IRepository<T> {
     add(t: T);
