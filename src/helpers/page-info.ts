@@ -1,4 +1,4 @@
-import { PageInfoMetadata } from "@app/core/interfaces/pageInfo.interface";
+import { PageInfoMetadata } from "@app/core/interfaces/page-info.interface";
 
 export class PageInfo {
 

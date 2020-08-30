@@ -1,4 +1,4 @@
-import { QueryParams } from '@app/helpers/queryParams';
+import { QueryParams } from '@app/helpers/query-params';
 import { ProductRepository } from '../repository/product.repository';
 import { Product } from '../interfaces/product';
 

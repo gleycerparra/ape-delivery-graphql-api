@@ -1,4 +1,4 @@
-import { QueryParams } from '@app/helpers/queryParams';
+import { QueryParams } from '@app/helpers/query-params';
 import Category from '../interfaces/category.interface';
 import CategoryRepository from '../repository/category.repository';
 

@@ -2,9 +2,9 @@ import * as mongoose from 'mongoose';
 import ICategoryRepository from '@app/modules/products/categories/repository/category.interface';
 import Category from '@app/modules/products/categories/interfaces/category.interface';
 import CategoryModel from '@app/modules/products/categories/category';
-import { PageInfo } from '@app/helpers/pageInfo';
-import { QueryParams } from '@app/helpers/queryParams';
-import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
+import { PageInfo } from '@app/helpers/page-info';
+import { QueryParams } from '@app/helpers/query-params';
+import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 
 class CategoryRepository implements ICategoryRepository {
     categories:any;

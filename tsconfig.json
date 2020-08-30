@@ -9,13 +9,24 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "es5",
+        "lib": [
+            "es6"
+        ],
+        "types": [
+            "reflect-metadata"
+        ],
+        "moduleResolution": "node",
         "sourceMap": false,
         "allowJs": true,
         "outDir": "./dist",
         "baseUrl": "./src",
         "paths": {
-            "@app/*": ["./*"]
+            "@app/*": [
+                "./*"
+            ]
         }
     },
-    "include": ["src/**/*"]
+    "include": [
+        "src/**/*"
+    ]
 }

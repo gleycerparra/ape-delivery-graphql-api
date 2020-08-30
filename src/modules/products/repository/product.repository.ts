@@ -1,10 +1,13 @@
-import { QueryParams } from '@app/helpers/queryParams';
+import { QueryParams } from '@app/helpers/query-params';
 import { IProductRepository } from './product.interface';
 import * as mongoose from 'mongoose';
-import { PageInfo } from '@app/helpers/pageInfo';
-import { PageInfoMetadata } from '@app/core/interfaces/pageInfo.interface';
+import { PageInfo } from '@app/helpers/page-info';
+import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { ProductModel } from '../product';
 import { Product } from '../interfaces/product';
+import { injectable, inject } from "inversify";
+import "reflect-metadata";
+@injectable()
 export class ProductRepository implements IProductRepository {
 
     products;
