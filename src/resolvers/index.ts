@@ -1,5 +1,16 @@
 import productResolvers from '@app/modules/products/resolvers';
 import categoryResolvers from '@app/modules/products/categories/resolvers';
 
-export const RProducts = productResolvers;
-export const RCategories = categoryResolvers;
+export default {
+    ...productResolvers,
+    ...categoryResolvers,
+    Query: {
+        ...productResolvers.Query,
+        ...categoryResolvers.Query
+    },
+    Mutation: {
+        ...productResolvers.Mutation,
+        ...categoryResolvers.Mutation
+    }
+}
+

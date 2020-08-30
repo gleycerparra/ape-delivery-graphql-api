@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose';
 import ICategoryRepository from '@app/modules/products/categories/repository/category.interface';
 import Category from '@app/modules/products/categories/interfaces/category.interface';
-import CategoryModel from '@app/modules/products/categories/category';
 import { PageInfo } from '@app/helpers/page-info';
 import { QueryParams } from '@app/helpers/query-params';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
+import { MongoDataSource } from 'apollo-datasource-mongodb';
 
-class CategoryRepository implements ICategoryRepository {
-    categories:any;
+class CategoryRepository extends MongoDataSource<Category> implements ICategoryRepository {
+    categories: any;
 
     async getAll(queryParams?: QueryParams<Category>): Promise<{ data: Category[], pageInfo: PageInfoMetadata | null }> {
         queryParams = new QueryParams(queryParams);
@@ -34,7 +34,7 @@ class CategoryRepository implements ICategoryRepository {
     }
 
     getCategories(): void {
-        this.categories = CategoryModel.find({});
+        this.categories = this.model.find({});
     }
 
     async makeQuery(queryParams: QueryParams<Category>) {
@@ -49,21 +49,21 @@ class CategoryRepository implements ICategoryRepository {
     }
 
     async get(id: string) {
-        return CategoryModel.findOne({ _id: mongoose.Types.ObjectId(id) })
+        return this.model.findOne({ _id: mongoose.Types.ObjectId(id) })
             .where('deletedAt').equals(null)
             .exec();
     }
 
     add(category: Category): Promise<mongoose.Document> {
-        return CategoryModel.create({ ...category });
+        return this.model.create({ ...category });
     }
 
     update(id: string, category: Category): Promise<mongoose.Document> {
-        return CategoryModel.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, category, { new: true }).exec();
+        return this.model.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, category, { new: true }).exec();
     }
 
     delete(id: string): Promise<mongoose.Document> {
-        return CategoryModel.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
+        return this.model.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
             deletedAt: new Date(),
             isActive: false
         }).exec();

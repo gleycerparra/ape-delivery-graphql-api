@@ -3,12 +3,12 @@ import { environment } from './environment';
 import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { typeDefs } from './schema';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
-import { RProducts, RCategories } from './resolvers'
+import resolvers from './resolvers'
 /* import { dataSources } from './data-sources'; */
 import { DIContainer } from './inversify.config';
 import { ProductRepository } from './modules/products/repository/product.repository';
 import * as mongoose from 'mongoose';
-import "reflect-metadata";
+import { dataSources } from "./data-sources";
 
 export default class App {
 
@@ -17,8 +17,7 @@ export default class App {
     private connection: typeof mongoose;
 
     constructor() {
-        console.log(environment);
-        this.resolveDIContainer();
+        /* this.resolveDIContainer(); */
         this.connectToDatabase();
     }
 
@@ -30,12 +29,11 @@ export default class App {
                 Time: GraphQLTime,
                 DateTime: GraphQLDateTime,
                 JSON: GraphQLJSON,
-                ...RProducts,
-                ...RCategories
+                ...resolvers
             },
             introspection: environment.apollo.introspection,
             playground: environment.apollo.playground,
-            /* dataSources: () => dataSources */
+            dataSources: () => dataSources
             /*    context: async ({ req }) => {
                    
                    const token = req.headers.authorization;
