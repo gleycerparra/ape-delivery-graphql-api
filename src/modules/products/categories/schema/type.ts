@@ -2,22 +2,16 @@ import { gql } from 'apollo-server';
 
 const CategoryType = gql`
     type Category {
-        _id: String,
+        _id: ID!,
         sku: String!,
         name: String!,
         description: String!,
         isActive: Boolean!,
-        subcategories: [Subcategories],
+        parent: ID,
+        children: [Category],
         createdAt: DateTime,
         updatedAt: DateTime,
         deletedAt: DateTime,
-    }
-
-    type Subcategories {
-        sku: String!,
-        name: String!
-        description: String!,
-        isActive: Boolean!,
     }
 `;
 
