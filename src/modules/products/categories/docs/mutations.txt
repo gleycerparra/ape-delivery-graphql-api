@@ -87,7 +87,7 @@ mutation UpdateCategory {
 |---------------------- Delete a category by id in GraphQL Playground ------------------------|
 
 mutation DeleteCategory {
-	deleteCategory(id: "5f4835f93ce3a121845fc2f2"){
+	deleteCategory(id: "5f4ebe60d8b13728980f0bf9"){
     _id
     deletedAt
   }
