@@ -1,0 +1,37 @@
+|------------------------- Get categories in GraphQL Playground ---------------------------|
+
+query GetCategories {
+	categories{
+    data{
+      _id
+      sku
+      name
+      description
+      isActive
+      subcategories {
+        sku
+        name
+        description
+        isActive
+      }
+    }
+  }
+}
+
+|------------------------- Get category by id in GraphQL Playground ---------------------------|
+
+query GetCategory {
+	category(id: "5f4835f93ce3a121845fc2f2"){
+      _id
+      sku
+      name
+      description
+      isActive
+      subcategories {
+        sku
+        name
+        description
+        isActive
+      }
+  }
+}

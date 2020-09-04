@@ -1,15 +1,9 @@
-import { QueryParams } from '@app/helpers/queryParams';
-import { ProductRepository } from '../repository/product.repository';
+import { QueryParams } from '@app/helpers/query-params';
 import { Product } from '../interfaces/product';
 
-const productRepository = new ProductRepository();
-
-/* let productService = container.get<ProductService>(RepositoryTypes.IProductRepository); */
-
 export const Query = {
-    product: async (parent: any, { id }: { id: string }) => await productRepository.get(id),
-    products: async (parent: any, args: QueryParams<Product>) => {
-        console.log(await productRepository.getAll(args));
-        return await productRepository.getAll(args);
+    product: async (_, { id }: { id: string }, { dataSources: { products } }) => await products.get(id),
+    products: async (_, args: QueryParams<Product>, { dataSources: { products } }) => {
+        return await products.getAll(args);
     },
 }

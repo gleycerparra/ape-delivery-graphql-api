@@ -1,29 +1,27 @@
-import "reflect-metadata";
-import { QueryParams } from '@app/helpers/query-params';
-import { IProductRepository } from './product.interface';
 import * as mongoose from 'mongoose';
+import ICategoryRepository from '@app/modules/products/categories/repository/category.interface';
+import Category from '@app/modules/products/categories/interfaces/category.interface';
 import { PageInfo } from '@app/helpers/page-info';
+import { QueryParams } from '@app/helpers/query-params';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
-import { Product } from '../interfaces/product';
 import { MongoDataSource } from 'apollo-datasource-mongodb';
 
-export class ProductRepository extends MongoDataSource<Product> implements IProductRepository {
+class CategoryRepository extends MongoDataSource<Category> implements ICategoryRepository {
+    categories: any;
 
-    products;
-
-    async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
+    async getAll(queryParams?: QueryParams<Category>): Promise<{ data: Category[], pageInfo: PageInfoMetadata | null }> {
         queryParams = new QueryParams(queryParams);
         let paginationMetadata: PageInfoMetadata | null = null;
-        this.getProducts();
+        this.getCategories();
 
         if (queryParams.searchText) {
-            this.products = this.products.find(
+            this.categories = this.categories.find(
                 queryParams.searchText
             );
         }
 
         if (typeof queryParams.skip !== undefined && typeof queryParams.limit !== undefined) {
-            const pageInfo = new PageInfo(this.products, queryParams.skip, queryParams.limit);
+            const pageInfo = new PageInfo(this.categories, queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
         }
 
@@ -35,12 +33,12 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
         };
     }
 
-    getProducts(): void {
-        this.products = this.model.find({});
+    getCategories(): void {
+        this.categories = this.model.find({});
     }
 
-    async makeQuery(queryParams: QueryParams<Product>) {
-        return await this.products.find(
+    async makeQuery(queryParams: QueryParams<Category>) {
+        return await this.categories.find(
             queryParams.searchText,
         )
             .where('deletedAt').equals(null)
@@ -56,18 +54,21 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
             .exec();
     }
 
-    add(product: Product): Promise<mongoose.Document> {
-        return this.model.create({ ...product });
+    add(category: Category): Promise<mongoose.Document> {
+        return this.model.create({ ...category });
     }
 
-    update(id: string, product: Product): Promise<mongoose.Document> {
-        return this.model.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, product, { new: true }).exec();
+    update(id: string, category: Category): Promise<mongoose.Document> {
+        return this.model.findOneAndUpdate({ _id: mongoose.Types.ObjectId(id) }, category, { new: true }).exec();
     }
 
     delete(id: string): Promise<mongoose.Document> {
         return this.model.findByIdAndUpdate(mongoose.Types.ObjectId(id), {
-            deletedAt: new Date()
+            deletedAt: new Date(),
+            isActive: false
         }).exec();
     }
 
 }
+
+export default CategoryRepository;
