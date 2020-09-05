@@ -23,7 +23,7 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
         }
 
         if (typeof queryParams.skip !== undefined && typeof queryParams.limit !== undefined) {
-            const pageInfo = new PageInfo(this.products, queryParams.skip, queryParams.limit);
+            const pageInfo = new PageInfo(await this.products.countDocuments().exec(), queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
         }
 

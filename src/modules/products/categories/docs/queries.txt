@@ -1,22 +1,41 @@
 |------------------------- Get categories in GraphQL Playground ---------------------------|
 
-query GetCategories {
-	categories{
-    data{
+query getCategories {
+  categories(
+    searchText: {
+      fields: ["name"],
+      text: "Carnes"
+    },
+    sort: {
+      name: 1
+    },
+    skip: 0,
+    limit: 10
+  ) {
+    data {
       _id
       sku
       name
       description
       isActive
-      subcategories {
+      children {
+        _id
         sku
         name
         description
-        isActive
       }
+    },
+    pageInfo {
+      from,
+      to,
+      total,
+      hasNextPage,
+      hasPreviousPage
     }
   }
 }
+
+
 
 |------------------------- Get category by id in GraphQL Playground ---------------------------|
 
