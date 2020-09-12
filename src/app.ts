@@ -9,6 +9,7 @@ import { DIContainer } from './inversify.config';
 import { ProductRepository } from './modules/products/repository/product.repository';
 import * as mongoose from 'mongoose';
 import { dataSources } from "./data-sources";
+import { GraphQLObjectID } from 'graphql-scalars';
 
 export default class App {
 
@@ -29,21 +30,19 @@ export default class App {
                 Time: GraphQLTime,
                 DateTime: GraphQLDateTime,
                 JSON: GraphQLJSON,
+                ObjectID: GraphQLObjectID,
                 ...resolvers
             },
             introspection: environment.apollo.introspection,
             playground: environment.apollo.playground,
             dataSources: () => dataSources
             /*    context: async ({ req }) => {
-                   
                    const token = req.headers.authorization;
                    if (token && token.includes('Bearer ')) {
                        const result: any = await isTokenValid(token);
-           
                        if (result.error) {
                            throw new AuthenticationError('Unauthorized');
                        }
-           
                        return {
                            user: result.decoded
                        }

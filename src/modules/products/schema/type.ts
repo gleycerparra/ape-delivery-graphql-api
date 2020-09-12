@@ -10,6 +10,7 @@ type Product{
     images: [ProductImage]!
     isActive: Boolean!
     productAttributes: [ProductAttribute]!
+    categories: [Category]!
     warrantyTerms: String
     description: String
     createdAt: DateTime

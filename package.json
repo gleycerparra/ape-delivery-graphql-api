@@ -6,7 +6,7 @@
     "scripts": {
         "test": "jest",
         "start": "node -r ./tsconfig-paths-bootstrap.js dist/index.js",
-        "dev": "nodemon --delay 1ms",
+        "dev": "nodemon",
         "build": "rimraf ./dist && tsc"
     },
     "keywords": [],

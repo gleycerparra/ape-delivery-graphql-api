@@ -6,6 +6,9 @@ import { PageInfo } from '@app/helpers/page-info';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { Product } from '../interfaces/product';
 import { MongoDataSource } from 'apollo-datasource-mongodb';
+import CategoryModel from "../categories/category";
+import NotFoundExeception from "@app/exceptions/not-found.exception";
+import { ApolloError, UserInputError } from "apollo-server";
 
 export class ProductRepository extends MongoDataSource<Product> implements IProductRepository {
 
@@ -14,20 +17,40 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
     async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
         queryParams = new QueryParams(queryParams);
         let paginationMetadata: PageInfoMetadata | null = null;
-        this.getProducts();
-
-        if (queryParams.searchText) {
-            this.products = this.products.find(
-                queryParams.searchText
-            );
+        let aggregate: any = [
+            {
+                $match: {
+                    deletedAt: null,
+                    ...queryParams.searchText
+                },
+            },
+        ];
+        if (queryParams.limit && typeof queryParams.skip !== undefined) {
+            aggregate = [
+                ...aggregate,
+                {
+                    $skip: queryParams.skip
+                },
+                {
+                    $limit: queryParams.limit
+                }
+            ];
+        }
+        if (queryParams.sort) {
+            aggregate = [
+                ...aggregate,
+                {
+                    $sort: queryParams.sort
+                }
+            ];
         }
 
-        if (typeof queryParams.skip !== undefined && typeof queryParams.limit !== undefined) {
-            const pageInfo = new PageInfo(await this.products.countDocuments().exec(), queryParams.skip, queryParams.limit);
+        const query = await this.model.aggregate(aggregate).exec();
+
+        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
+            const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
         }
-
-        const query = await this.makeQuery(queryParams);
 
         return {
             data: [...query],
@@ -35,19 +58,12 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
         };
     }
 
-    getProducts(): void {
-        this.products = this.model.find({});
-    }
-
-    async makeQuery(queryParams: QueryParams<Product>) {
-        return await this.products.find(
-            queryParams.searchText,
+    async getTotal(searchText: any): Promise<number> {
+        return await this.model.find(
+            { $and: [{ deletedAt: null }, { parent: null }] },
+            searchText
         )
-            .where('deletedAt').equals(null)
-            .skip(queryParams.skip)
-            .limit(queryParams.limit)
-            .sort(queryParams.sort)
-            .exec();
+            .count()
     }
 
     async get(id: string) {
@@ -56,8 +72,28 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
             .exec();
     }
 
-    add(product: Product): Promise<mongoose.Document> {
-        return this.model.create({ ...product });
+    async add(product: Product): Promise<mongoose.Document | NotFoundExeception> {
+        if (product.categories) {
+            let categories = [];
+            for (const id of product.categories) {
+                const category = await CategoryModel.findOne({ _id: id }).lean().exec();
+                if (category === null) {
+                    return new NotFoundExeception('Category', id);
+                } else {
+                    const validateIfIsParent = await CategoryModel.find({ parent: id }).exec();
+                    if (validateIfIsParent.length > 0) {
+                        return new UserInputError(`Category with ${id} is a parent and can't be directly assigned to a product`)
+                    } else {
+                        console.log(category);
+                        categories = [...categories, category];
+                    }
+                }
+            }
+            product.categories = categories;
+        }
+        return this.model.create(
+            { ...product
+            });
     }
 
     update(id: string, product: Product): Promise<mongoose.Document> {
