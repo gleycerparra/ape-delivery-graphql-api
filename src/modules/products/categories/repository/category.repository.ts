@@ -70,10 +70,8 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
         return await this.model.find(
             { $and: [{ deletedAt: null }, { parent: null }] },
             searchText
-        )
-            .count()
+        ).count()
     }
-
 
     async get(id: string) {
         return this.model.findOne({ _id: mongoose.Types.ObjectId(id) })
