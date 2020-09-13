@@ -5,13 +5,7 @@ export default interface Category extends mongoose.Document {
     name: string,
     description: string,
     isActive: boolean,
+    parent: string,
     deletedAt?: Date,
-    subcategories?: [ISubcategory]
+    children?: [Category]
 };
-
-interface ISubcategory {
-    sku: string,
-    name: string,
-    description: string,
-    isActive: boolean
-}

@@ -6,9 +6,9 @@ export class QueryParams<T> {
     searchText: SearchText<T> | any;
 
     constructor(queryParams?: QueryParams<T>) {
-        this.skip = queryParams?.skip || 0;
-        this.limit = queryParams?.limit || 25;
-        this.sort = queryParams?.sort || {};
+        this.skip = queryParams?.skip;
+        this.limit = queryParams?.limit;
+        this.sort = queryParams?.sort;
 
         if (queryParams?.searchText?.fields && queryParams?.searchText?.text) {
            this.searchText = this.setTextSearch(queryParams.searchText.fields, queryParams.searchText.text);

@@ -9,6 +9,7 @@ const CategoryQuery = gql`
     extend type Query {
         """
         Return all categories.
+        If you provide and invalid param such as (limit: 0, skip > total) the pagination will be ignored and might return null or an error.
         """
         categories(
             searchText: SearchText,

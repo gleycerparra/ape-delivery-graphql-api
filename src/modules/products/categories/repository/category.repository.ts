@@ -12,20 +12,53 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
     async getAll(queryParams?: QueryParams<Category>): Promise<{ data: Category[], pageInfo: PageInfoMetadata | null }> {
         queryParams = new QueryParams(queryParams);
         let paginationMetadata: PageInfoMetadata | null = null;
-        this.getCategories();
 
-        if (queryParams.searchText) {
-            this.categories = this.categories.find(
-                queryParams.searchText
-            );
+        let aggregate: any = [
+            {
+                $match: {
+                    deletedAt: null,
+                    parent: null,
+                    ...queryParams.searchText
+                },
+            },
+            {
+                $graphLookup: {
+                    from: 'categories',
+                    startWith: '$_id',
+                    connectFromField: '_id',
+                    connectToField: 'parent',
+                    as: 'children'
+                }
+            },
+        ];
+
+        if (queryParams.limit && typeof queryParams.skip !== undefined) {
+            aggregate = [
+                ...aggregate,
+                {
+                    $skip: queryParams.skip
+                },
+                {
+                    $limit: queryParams.limit
+                }
+            ];
         }
 
-        if (typeof queryParams.skip !== undefined && typeof queryParams.limit !== undefined) {
-            const pageInfo = new PageInfo(this.categories, queryParams.skip, queryParams.limit);
+        if (queryParams.sort) {
+            aggregate = [
+                ...aggregate,
+                {
+                    $sort: queryParams.sort
+                }
+            ];
+        }
+
+        const query = await this.model.aggregate(aggregate).exec();
+
+        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
+            const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
         }
-
-        const query = await this.makeQuery(queryParams);
 
         return {
             data: [...query],
@@ -33,20 +66,14 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
         };
     }
 
-    getCategories(): void {
-        this.categories = this.model.find({});
+    async getTotal(searchText: any): Promise<number> {
+        return await this.model.find(
+            { $and: [{ deletedAt: null }, { parent: null }] },
+            searchText
+        )
+            .count()
     }
 
-    async makeQuery(queryParams: QueryParams<Category>) {
-        return await this.categories.find(
-            queryParams.searchText,
-        )
-            .where('deletedAt').equals(null)
-            .skip(queryParams.skip)
-            .limit(queryParams.limit)
-            .sort(queryParams.sort)
-            .exec();
-    }
 
     async get(id: string) {
         return this.model.findOne({ _id: mongoose.Types.ObjectId(id) })

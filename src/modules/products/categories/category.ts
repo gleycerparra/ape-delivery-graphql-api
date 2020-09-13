@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 import * as mongoose from "mongoose";
 import Category from './interfaces/category.interface';
+import { ObjectId } from "mongodb";
 
 const categorySchema = new Schema({
     sku: {
@@ -15,26 +16,22 @@ const categorySchema = new Schema({
     },
     description: {
         type: String,
-        required: true,
-        index: false
+        required: true
+    },
+    parent: {
+        type: ObjectId,
+        required: false
     },
     isActive: {
         type: Boolean,
-        required: false,
-        index: false
+        required: false
     },
     deletedAt: {
         type: Date,
         default: null,
         required: false
     },
-    subcategories: [{
-        sku: String,
-        name: String,
-        description: String,
-        isActive: Boolean
-    }]
-});
+}, { timestamps: true });
 
 const CategoryModel = mongoose.model<Category>('Category', categorySchema);
 

@@ -6,6 +6,7 @@ scalar JSON
 scalar DateTime
 scalar Time
 scalar Date
+scalar ObjectID
 
 """ type Query {
     _empty: String

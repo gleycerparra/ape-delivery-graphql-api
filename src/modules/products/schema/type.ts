@@ -3,13 +3,14 @@ import { gql } from "apollo-server";
 export const ProductType = gql`
 
 type Product{
-    _id: String
+    _id: ID!
     name: String!
     price: Float!
     sku: String!
     images: [ProductImage]!
     isActive: Boolean!
     productAttributes: [ProductAttribute]!
+    categories: [Category]!
     warrantyTerms: String
     description: String
     createdAt: DateTime

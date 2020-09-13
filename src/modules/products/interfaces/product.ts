@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Product extends mongoose.Document{
+export interface Product extends mongoose.Document {
     name: string;
     price: number;
     sku: string;
@@ -9,15 +9,27 @@ export interface Product extends mongoose.Document{
     warrantyTerms?: string;
     deletedAt?: Date;
     productAttributes: IProductAttribute[];
+    categories: any;
     images: IProductImage[];
-  }
-  
-  interface IProductAttribute {
+}
+
+interface Category extends mongoose.Document {
+    id: string,
+    sku?: string,
+    name?: string,
+    description?: string,
+    isActive?: boolean,
+    parent?: string,
+    deletedAt?: Date,
+    children?: [Category]
+};
+
+
+interface IProductAttribute {
     name: string;
     position: number;
-  }
-  interface IProductImage {
+}
+interface IProductImage {
     url: string;
     description: string;
-  }
-  
+}

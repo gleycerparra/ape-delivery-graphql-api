@@ -2,44 +2,20 @@
 
 mutation CreateCategory {
 	createCategory(category: {
-    sku: "cat-001",
-    name: "Carnes",
-    description: "Carnes: esta categoria incluye las siguientes subcategorias: Res, Cerdo y Pollo",
+    sku: "cat-002",
+    name: "Otras bebidas",
+    description: "Otras bebidas",
     isActive: true,
-    subcategories: [
-      {
-        sku: "cat-001-001",
-        name: "Res",
-        description: "Res: Carne de vacuno.",
-        isActive: true
-      },
-      {
-        sku: "cat-001-002",
-        name: "Cerdo",
-        description: "Cerdo: Carne blanca de cerdo.",
-        isActive: true
-      },
-      {
-        sku: "cat-001-001",
-        name: "Pollo",
-        description: "Pollo: Carne blanca de pollo y otras aves.",
-        isActive: true
-      },
-    ]
+    parent: "5f52c69f6323ce2a5ba9917b"
   }){
     _id
     sku
     name
     description
     isActive
-    subcategories {
-      sku
-      name
-      description
-      isActive
-    }
   }
 }
+
 
 |------------------------- Update a category in GraphQL Playground ---------------------------|
 
@@ -87,7 +63,7 @@ mutation UpdateCategory {
 |---------------------- Delete a category by id in GraphQL Playground ------------------------|
 
 mutation DeleteCategory {
-	deleteCategory(id: "5f4835f93ce3a121845fc2f2"){
+	deleteCategory(id: "5f4ebe60d8b13728980f0bf9"){
     _id
     deletedAt
   }
