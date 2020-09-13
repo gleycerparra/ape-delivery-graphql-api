@@ -5,7 +5,7 @@ const Query = {
     category: async (_, { id }: { id: string }, { dataSources: { productCategories } }) => await productCategories.get(id),
 
     categories: async (_, args: QueryParams<Category>, { dataSources: { productCategories } }) => {
-        return await productCategories.getAll(args);
+        return await productCategories.getAll(new QueryParams(args));
     }
 }
 

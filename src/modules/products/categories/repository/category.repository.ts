@@ -10,7 +10,7 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
     categories: any;
 
     async getAll(queryParams?: QueryParams<Category>): Promise<{ data: Category[], pageInfo: PageInfoMetadata | null }> {
-        queryParams = new QueryParams(queryParams);
+        /* queryParams = new QueryParams(queryParams); */
         let paginationMetadata: PageInfoMetadata | null = null;
 
         let aggregate: any = [
@@ -55,10 +55,10 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
 
         const query = await this.model.aggregate(aggregate).exec();
 
-        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
+/*         if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
             const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
-        }
+        } */
 
         return {
             data: [...query],
@@ -70,10 +70,8 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
         return await this.model.find(
             { $and: [{ deletedAt: null }, { parent: null }] },
             searchText
-        )
-            .count()
+        ).count()
     }
-
 
     async get(id: string) {
         return this.model.findOne({ _id: mongoose.Types.ObjectId(id) })
