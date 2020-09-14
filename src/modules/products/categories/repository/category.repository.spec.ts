@@ -1,6 +1,21 @@
-import mongoose from 'mongoose';
+import { clearDatabase, closeDatabase, connect } from '../../../../in-memory-db.config';
 import CategoryModel from '../category';
 import CategoryRepository from './category.repository';
+
+/**
+ * Connect to a new in-memory database before running any tests.
+ */
+beforeAll(async () => await connect());
+
+/**
+ * Clear all test data after every test.
+ */
+afterEach(async () => await clearDatabase());
+
+/**
+ * Remove and close the db and server.
+ */
+afterAll(async () => await closeDatabase());
 
 const category = {
     sku: 'test',
@@ -14,22 +29,11 @@ describe('Categories Repository', () => {
     let db;
     // It's just so easy to connect to the MongoDB Memory Server 
     // By using mongoose.connect
-    beforeAll(async () => {
-        connection = await mongoose.connect(process.env.MONGO_URL, { // <= MONGO_URL env var set
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        db = await connection.db(); // <= env var (presumably) includes the db so no longer need to pass this
-    });
 
-    afterAll(async () => {
-        await connection.close();
-    });
-
-   /*  it('create category successfully', async () => {
+    it('create category successfully', async () => {
         const categoryRepository = new CategoryRepository(CategoryModel);
         const addedCategory = await categoryRepository.add(category as any);
         // Object Id should be defined when successfully saved to MongoDB.
         expect(addedCategory._id).toBeDefined();
-    }); */
+    });
 })
