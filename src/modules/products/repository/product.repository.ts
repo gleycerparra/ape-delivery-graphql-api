@@ -1,21 +1,21 @@
 import "reflect-metadata";
-import { QueryParams } from '@app/helpers/query-params';
 import { IProductRepository } from './product.interface';
 import * as mongoose from 'mongoose';
-import { PageInfo } from '@app/helpers/page-info';
+import { PageInfoService } from '@app/services/page-info.service';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { Product } from '../interfaces/product';
 import { MongoDataSource } from 'apollo-datasource-mongodb';
 import CategoryModel from "../categories/category";
 import NotFoundExeception from "@app/exceptions/not-found.exception";
 import { ApolloError, UserInputError } from "apollo-server";
+import { QueryParams } from "@app/core/interfaces/query-params.interface";
 
 export class ProductRepository extends MongoDataSource<Product> implements IProductRepository {
 
     products;
 
     async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
-        queryParams = new QueryParams(queryParams);
+        /* queryParams = new QueryParams(queryParams); */
         let paginationMetadata: PageInfoMetadata | null = null;
         let aggregate: any = [
             {
@@ -47,10 +47,10 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
 
         const query = await this.model.aggregate(aggregate).exec();
 
-        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
-            const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
+        /* if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
+            const pageInfo = new PageInfoService(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
             paginationMetadata = await pageInfo.getPageInfo();
-        }
+        } */
 
         return {
             data: [...query],

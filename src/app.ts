@@ -1,24 +1,27 @@
+import 'reflect-metadata';
 import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
 import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { typeDefs } from './schema';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
-import resolvers from './resolvers'
-/* import { dataSources } from './data-sources'; */
-import { DIContainer } from './inversify.config';
-import { ProductRepository } from './modules/products/repository/product.repository';
+import resolvers from './resolvers';
+import { container, types } from './inversify.config';
 import * as mongoose from 'mongoose';
 import { dataSources } from "./data-sources";
+console.log("dataSources", dataSources);
 import { GraphQLObjectID } from 'graphql-scalars';
+import { IPageInfoService, PageInfoService } from './services/page-info.service';
+import { IQueryParamsService, QueryParamsService } from './services/query-params.service';
+import CategoryRepository from './modules/products/categories/repository/category.repository';
+import ICategoryRepository from './modules/products/categories/repository/category.interface';
 
 export default class App {
 
     private server: ApolloServer;
-    private container: DIContainer;
     private connection: typeof mongoose;
 
     constructor() {
-        /* this.resolveDIContainer(); */
+        this.resolveDIContainer();
         this.connectToDatabase();
     }
 
@@ -60,8 +63,10 @@ export default class App {
     }
 
     private resolveDIContainer(): void {
-        this.container = new DIContainer();
-        this.container.DIContainer.resolve<ProductRepository>(ProductRepository)
+/*         const pageInfo = container.get<IPageInfoService>(types.IPageInfoService);
+        container.get<IQueryParamsService<any>>(types.IQueryParamsService); */
+        const category = container.get<ICategoryRepository>(types.ICategoryRepository);
+        console.log("resolveDIContainer -> category", category)
     }
 
     private async connectToDatabase() {
@@ -69,7 +74,7 @@ export default class App {
             this.connection = await mongoose.connect(environment.mongoDb.url, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            })
+            });
 
             if (this.connection) {
                 console.log(`🐘 Connected to MongoDB`);

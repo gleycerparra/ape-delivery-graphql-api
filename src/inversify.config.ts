@@ -1,20 +1,20 @@
 import { Container } from "inversify";
-import { ProductRepository } from "./modules/products/repository/product.repository";
+import ICategoryRepository from "./modules/products/categories/repository/category.interface";
+import CategoryRepository from "./modules/products/categories/repository/category.repository";
+import { IPageInfoService, PageInfoService } from "./services/page-info.service";
+import { IQueryParamsService, QueryParamsService } from "./services/query-params.service";
 
-export class DIContainer {
+export const types = {
+    IPageInfoService: Symbol.for("IPageInfoService"),
+    IQueryParamsService: Symbol.for("IQueryParamsService"),
+    ICategoryRepository: Symbol.for("ICategoryRepository"),
+};
+const container = new Container();
 
-    public DIContainer: Container;
-    private types = {
-        ProductRepository: Symbol.for("ProductRepository"),
-    };
+container.bind<IPageInfoService>(types.IPageInfoService).to(PageInfoService);
+container.bind<IQueryParamsService<any>>(types.IQueryParamsService).to(QueryParamsService);
+container.bind<ICategoryRepository>(types.ICategoryRepository).to(CategoryRepository);
 
-    constructor() {
-        this.setup();
-    }
 
-    setup(): void {
-        this.DIContainer = new Container();
+export { container };
 
-        this.DIContainer.bind<ProductRepository>(this.types.ProductRepository).to(ProductRepository)
-    }
-}

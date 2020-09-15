@@ -1,16 +1,42 @@
 import * as mongoose from 'mongoose';
 import ICategoryRepository from '@app/modules/products/categories/repository/category.interface';
 import Category from '@app/modules/products/categories/interfaces/category.interface';
-import { PageInfo } from '@app/helpers/page-info';
-import { QueryParams } from '@app/helpers/query-params';
+import CategoryModel from '../category';
+import { IPageInfoService, PageInfoService } from '@app/services/page-info.service';
+import { IQueryParamsService, QueryParamsService } from '@app/services/query-params.service';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { MongoDataSource } from 'apollo-datasource-mongodb';
+import { QueryParams } from '@app/core/interfaces/query-params.interface';
+import { decorate, inject, injectable, optional } from 'inversify';
 
+const types = {
+    IPageInfoService: Symbol.for("IPageInfoService"),
+    IQueryParamsService: Symbol.for("IQueryParamsService"),
+    ICategoryRepository: Symbol.for("ICategoryRepository"),
+};
+
+decorate(injectable(), MongoDataSource);
+@injectable()
 class CategoryRepository extends MongoDataSource<Category> implements ICategoryRepository {
+
+    private _queryParamsService: IQueryParamsService<Category>;
+    private _pageInfoService: IPageInfoService;
+
+    constructor(
+        @inject(types.IQueryParamsService) @optional() queryParamsService?: QueryParamsService<Category>,
+        @inject(types.IPageInfoService) @optional() pageInfoService?: PageInfoService
+    ) {
+        super(CategoryModel);
+        this._pageInfoService = pageInfoService;
+        console.log("CategoryRepository -> this._pageInfoService", this._pageInfoService)
+        this._queryParamsService = queryParamsService;
+        console.log("CategoryRepository -> this._queryParamsService", this._queryParamsService)
+    }
+
     categories: any;
 
     async getAll(queryParams?: QueryParams<Category>): Promise<{ data: Category[], pageInfo: PageInfoMetadata | null }> {
-        /* queryParams = new QueryParams(queryParams); */
+        queryParams = this._queryParamsService.getParams(queryParams);
         let paginationMetadata: PageInfoMetadata | null = null;
 
         let aggregate: any = [
@@ -55,10 +81,9 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
 
         const query = await this.model.aggregate(aggregate).exec();
 
-/*         if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
-            const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
-            paginationMetadata = await pageInfo.getPageInfo();
-        } */
+        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
+            paginationMetadata = await this._pageInfoService.getPageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
+        }
 
         return {
             data: [...query],
@@ -70,7 +95,7 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
         return await this.model.find(
             { $and: [{ deletedAt: null }, { parent: null }] },
             searchText
-        ).count()
+        ).count();
     }
 
     async get(id: string) {
@@ -95,5 +120,6 @@ class CategoryRepository extends MongoDataSource<Category> implements ICategoryR
     }
 
 }
+
 
 export default CategoryRepository;

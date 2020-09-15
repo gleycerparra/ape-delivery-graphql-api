@@ -1,8 +1,7 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 const mongod = new MongoMemoryServer();
-jest.setTimeout(60000);
 /**
  * Connect to the in-memory database.
  */
@@ -34,8 +33,9 @@ export async function closeDatabase() {
 export async function clearDatabase() {
     const collections = mongoose.connection.collections;
 
+    // tslint:disable-next-line: forin
     for (const key in collections) {
         const collection = collections[key];
-        await collection.deleteMany({})
+        await collection.deleteMany({});
     }
 }
