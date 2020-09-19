@@ -2,7 +2,7 @@ import { PageInfoMetadata } from "@app/core/interfaces/page-info.interface";
 import { injectable } from "inversify";
 
 export interface IPageInfoService {
-    getPageInfo: (total: number, skip: number, limit: number) => Promise<PageInfoMetadata>;
+    getPageInfo(total: number, skip: number, limit: number): Promise<PageInfoMetadata>;
 }
 
 @injectable()

@@ -11,9 +11,9 @@ export const types = {
 };
 const container = new Container();
 
-container.bind<IPageInfoService>(types.IPageInfoService).to(PageInfoService);
-container.bind<IQueryParamsService<any>>(types.IQueryParamsService).to(QueryParamsService);
-container.bind<ICategoryRepository>(types.ICategoryRepository).to(CategoryRepository);
+container.bind<IPageInfoService>(types.IPageInfoService).to(PageInfoService).inSingletonScope();
+container.bind<IQueryParamsService<any>>(types.IQueryParamsService).to(QueryParamsService).inSingletonScope();
+container.bind<CategoryRepository>(types.ICategoryRepository).to(CategoryRepository);
 
 
 export { container };

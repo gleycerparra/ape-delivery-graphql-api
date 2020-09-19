@@ -6,4 +6,4 @@ export const Query = {
     products: async (_, args: QueryParams<Product>, { dataSources: { products } }) => {
         return await products.getAll(args);
     },
-}
+};

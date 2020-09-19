@@ -5,6 +5,6 @@ export default class NotFoundExeception {
         return new ApolloError(
             `${subject} with ${id} id not found`,
             'NOT_FOUND'
-        )
+        );
     }
 }

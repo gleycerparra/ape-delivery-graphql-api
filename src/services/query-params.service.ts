@@ -6,20 +6,12 @@ export interface IQueryParamsService<T> {
     limit: number;
     sort: Sort<T>;
     searchText: SearchText<T> | any;
-    getParams: (queryParams?: QueryParams<T>) => {
-        skip: any,
-        limit: any,
-        sort: any,
-        searchText: any
-    };
-    setTextSearch: (fields: [keyof T], searchText: string) => {
-        $or: any
-    };
+    getParams(queryParams?: QueryParams<T>): any;
+    setTextSearch(fields: [keyof T], searchText: string): any;
 }
 
 @injectable()
 export class QueryParamsService<T> implements IQueryParamsService<T>{
-
     skip: number;
     limit: number;
     sort: Sort<T>;

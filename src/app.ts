@@ -1,18 +1,14 @@
 import 'reflect-metadata';
 import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
-import { ApolloServer, AuthenticationError } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './schema';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 import resolvers from './resolvers';
 import { container, types } from './inversify.config';
 import * as mongoose from 'mongoose';
 import { dataSources } from "./data-sources";
-console.log("dataSources", dataSources);
 import { GraphQLObjectID } from 'graphql-scalars';
-import { IPageInfoService, PageInfoService } from './services/page-info.service';
-import { IQueryParamsService, QueryParamsService } from './services/query-params.service';
-import CategoryRepository from './modules/products/categories/repository/category.repository';
 import ICategoryRepository from './modules/products/categories/repository/category.interface';
 
 export default class App {
@@ -21,7 +17,6 @@ export default class App {
     private connection: typeof mongoose;
 
     constructor() {
-        this.resolveDIContainer();
         this.connectToDatabase();
     }
 
@@ -38,7 +33,11 @@ export default class App {
             },
             introspection: environment.apollo.introspection,
             playground: environment.apollo.playground,
-            dataSources: () => dataSources
+            dataSources: () => {
+                return {
+                    productsCategories: container.get<ICategoryRepository>(types.ICategoryRepository) as any
+                };
+            }
             /*    context: async ({ req }) => {
                    const token = req.headers.authorization;
                    if (token && token.includes('Bearer ')) {
@@ -60,13 +59,6 @@ export default class App {
             console.log(`🚀 Server ready at ${url}`);
         });
 
-    }
-
-    private resolveDIContainer(): void {
-/*         const pageInfo = container.get<IPageInfoService>(types.IPageInfoService);
-        container.get<IQueryParamsService<any>>(types.IQueryParamsService); */
-        const category = container.get<ICategoryRepository>(types.ICategoryRepository);
-        console.log("resolveDIContainer -> category", category)
     }
 
     private async connectToDatabase() {
