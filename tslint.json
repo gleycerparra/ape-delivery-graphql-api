@@ -1,6 +1,16 @@
 {
     "extends": "tslint:recommended",
     "rules": {
-        "no-console": false
+        "no-console": false,
+        "semicolon": {
+            "options": [
+                "always"
+            ]
+        },
+        "indent": [
+            true,
+            "spaces",
+            4
+        ]
     }
 }

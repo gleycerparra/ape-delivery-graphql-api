@@ -1,31 +1,47 @@
 import "reflect-metadata";
-import { QueryParams } from '@app/helpers/query-params';
 import { IProductRepository } from './product.interface';
 import * as mongoose from 'mongoose';
-import { PageInfo } from '@app/helpers/page-info';
+import { IPageInfoService, PageInfoService } from '@app/services/page-info.service';
 import { PageInfoMetadata } from '@app/core/interfaces/page-info.interface';
 import { Product } from '../interfaces/product';
 import { MongoDataSource } from 'apollo-datasource-mongodb';
 import CategoryModel from "../categories/category";
 import NotFoundExeception from "@app/exceptions/not-found.exception";
 import { ApolloError, UserInputError } from "apollo-server";
+import { QueryParams } from "@app/core/interfaces/query-params.interface";
+import { IQueryParamsService } from "@app/services/query-params.service";
+import { inject, optional } from "inversify";
+import { types } from "@app/inversify.config";
+import { ProductModel } from "../product";
 
 export class ProductRepository extends MongoDataSource<Product> implements IProductRepository {
 
-    products;
+    private _queryParamsService: IQueryParamsService<Product>;
+    private _pageInfoService: IPageInfoService;
+
+    constructor(
+        @inject(types.IQueryParamsService) @optional() queryParamsService?: IQueryParamsService<Product>,
+        @inject(types.IPageInfoService) @optional() pageInfoService?: IPageInfoService
+    ) {
+        super(ProductModel);
+        this._pageInfoService = pageInfoService;
+        this._queryParamsService = queryParamsService;
+    }
 
     async getAll(queryParams?: QueryParams<Product>): Promise<{ data: Product[], pageInfo: PageInfoMetadata | null }> {
-        queryParams = new QueryParams(queryParams);
+        if (queryParams) {
+            queryParams = this._queryParamsService.getParams(queryParams);
+        }
         let paginationMetadata: PageInfoMetadata | null = null;
         let aggregate: any = [
             {
                 $match: {
                     deletedAt: null,
-                    ...queryParams.searchText
+                    ...queryParams?.searchText
                 },
             },
         ];
-        if (queryParams.limit && typeof queryParams.skip !== undefined) {
+        if (queryParams?.limit && typeof queryParams?.skip !== undefined) {
             aggregate = [
                 ...aggregate,
                 {
@@ -36,7 +52,7 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
                 }
             ];
         }
-        if (queryParams.sort) {
+        if (queryParams?.sort) {
             aggregate = [
                 ...aggregate,
                 {
@@ -47,9 +63,8 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
 
         const query = await this.model.aggregate(aggregate).exec();
 
-        if (typeof queryParams.skip !== undefined && queryParams.limit && query.length > 0) {
-            const pageInfo = new PageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
-            paginationMetadata = await pageInfo.getPageInfo();
+        if (typeof queryParams?.skip !== undefined && queryParams?.limit && query.length > 0) {
+            paginationMetadata = await this._pageInfoService.getPageInfo(await this.getTotal(queryParams.searchText), queryParams.skip, queryParams.limit);
         }
 
         return {
@@ -63,7 +78,7 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
             { $and: [{ deletedAt: null }, { parent: null }] },
             searchText
         )
-            .count()
+            .count();
     }
 
     async get(id: string) {
@@ -92,7 +107,8 @@ export class ProductRepository extends MongoDataSource<Product> implements IProd
             product.categories = categories;
         }
         return this.model.create(
-            { ...product
+            {
+                ...product
             });
     }
 

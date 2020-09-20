@@ -1,4 +1,4 @@
-import { QueryParams } from '@app/helpers/query-params';
+import { QueryParams } from '@app/core/interfaces/query-params.interface';
 import { Product } from '../interfaces/product';
 
 export const Query = {
@@ -6,4 +6,4 @@ export const Query = {
     products: async (_, args: QueryParams<Product>, { dataSources: { products } }) => {
         return await products.getAll(args);
     },
-}
+};

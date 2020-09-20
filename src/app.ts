@@ -1,24 +1,22 @@
+import 'reflect-metadata';
 import { GraphQLJSON } from 'graphql-type-json';
 import { environment } from './environment';
-import { ApolloServer, AuthenticationError } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './schema';
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
-import resolvers from './resolvers'
-/* import { dataSources } from './data-sources'; */
-import { DIContainer } from './inversify.config';
-import { ProductRepository } from './modules/products/repository/product.repository';
+import resolvers from './resolvers';
+import { container, types } from './inversify.config';
 import * as mongoose from 'mongoose';
 import { dataSources } from "./data-sources";
 import { GraphQLObjectID } from 'graphql-scalars';
+import ICategoryRepository from './modules/products/categories/repository/category.interface';
 
 export default class App {
 
     private server: ApolloServer;
-    private container: DIContainer;
     private connection: typeof mongoose;
 
     constructor() {
-        /* this.resolveDIContainer(); */
         this.connectToDatabase();
     }
 
@@ -35,7 +33,11 @@ export default class App {
             },
             introspection: environment.apollo.introspection,
             playground: environment.apollo.playground,
-            dataSources: () => dataSources
+            dataSources: () => {
+                return {
+                    productsCategories: container.get<ICategoryRepository>(types.ICategoryRepository) as any
+                };
+            }
             /*    context: async ({ req }) => {
                    const token = req.headers.authorization;
                    if (token && token.includes('Bearer ')) {
@@ -59,17 +61,12 @@ export default class App {
 
     }
 
-    private resolveDIContainer(): void {
-        this.container = new DIContainer();
-        this.container.DIContainer.resolve<ProductRepository>(ProductRepository)
-    }
-
     private async connectToDatabase() {
         try {
             this.connection = await mongoose.connect(environment.mongoDb.url, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            })
+            });
 
             if (this.connection) {
                 console.log(`🐘 Connected to MongoDB`);

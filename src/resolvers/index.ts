@@ -12,5 +12,5 @@ export default {
         ...productResolvers.Mutation,
         ...categoryResolvers.Mutation
     }
-}
+};
 
