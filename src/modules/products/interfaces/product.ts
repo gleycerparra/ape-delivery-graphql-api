@@ -14,22 +14,21 @@ export interface Product extends mongoose.Document {
 }
 
 interface Category extends mongoose.Document {
-    id: string,
-    sku?: string,
-    name?: string,
-    description?: string,
-    isActive?: boolean,
-    parent?: string,
-    deletedAt?: Date,
-    children?: [Category]
-};
-
+    id: string;
+    sku?: string;
+    name?: string;
+    description?: string;
+    isActive?: boolean;
+    parent?: string;
+    deletedAt?: Date;
+    children?: [Category];
+}
 
 interface IProductAttribute {
     name: string;
-    position: number;
+    description: string;
 }
 interface IProductImage {
     url: string;
-    description: string;
+    position: number;
 }

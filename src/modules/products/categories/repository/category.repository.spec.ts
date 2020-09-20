@@ -4,9 +4,9 @@ import { QueryParamsService } from '@app/services/query-params.service';
 import { clearDatabase, closeDatabase, connect } from '@app/in-memory-db.config';
 import Category from '../interfaces/category.interface';
 import CategoryRepository from './category.repository';
-// tslint:disable-next-line: no-var-requires
-const faker = require('faker');
 import CategoryModel from '@app/modules/products/categories/category';
+import * as faker from 'faker';
+
 
 beforeAll(async () => await connect());
 afterEach(async () => await clearDatabase());
@@ -32,7 +32,7 @@ while (count >= 0) {
 }
 
 describe('Categories Repository', () => {
-    it('should create category successfully', async () => {
+    it('should create a category successfully', async () => {
         const categoryRepository = new CategoryRepository();
 
         const addedCategory = await categoryRepository.add(category as Category);
@@ -76,7 +76,21 @@ describe('Categories Repository', () => {
         });
         it('should retrieve correct children if that propery exist in a category', async () => {
             const categoryRepository = new CategoryRepository();
+            const addedParentCategory = await categoryRepository.add(category as Category);
+            await CategoryModel.insertMany([
+                {
+                    ...category,
+                    parent: addedParentCategory._id
+                },
+                {
+                    ...category,
+                    parent: addedParentCategory._id
+                }
+            ]);
 
+            const gettedCategories = await categoryRepository.getAll();
+
+            expect(gettedCategories.data[0].children).toHaveLength(2);
         });
         it('should retrieve correct pageInfo', async () => {
             const queryParamsService = new QueryParamsService();
