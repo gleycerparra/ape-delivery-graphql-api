@@ -3,8 +3,8 @@ import { PageInfoService } from '@app/services/page-info.service';
 import { QueryParamsService } from '@app/services/query-params.service';
 import { clearDatabase, closeDatabase, connect } from '@app/in-memory-db.config';
 import Category from '../interfaces/category.interface';
-import CategoryRepository from './category.repository';
 import CategoryModel from '@app/modules/products/categories/category';
+import CategoryRepository from './category.repository';
 import * as faker from 'faker';
 
 
