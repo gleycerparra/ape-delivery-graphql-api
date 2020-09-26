@@ -7,7 +7,6 @@ import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 import resolvers from './resolvers';
 import { container, types } from './inversify.config';
 import * as mongoose from 'mongoose';
-import { dataSources } from "./data-sources";
 import { GraphQLObjectID } from 'graphql-scalars';
 import ICategoryRepository from './modules/products/categories/repository/category.interface';
 

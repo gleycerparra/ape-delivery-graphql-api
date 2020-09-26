@@ -1,7 +1,7 @@
 {
     "name": "app-delivery-graphql-api",
     "version": "1.0.0",
-    "description": "",
+    "description": "Ape API, is a project focus on delivery in Venezuela",
     "main": "index.js",
     "scripts": {
         "test": "jest --runInBand",
@@ -20,8 +20,6 @@
         "@types/graphql-type-json": "0.3.2",
         "@types/jest": "^26.0.13",
         "@types/jsonwebtoken": "^8.5.0",
-        "@types/mongoose": "5.7.14",
-        "@types/mongoose-delete": "0.5.1",
         "@types/node": "13.13.4",
         "faker": "^5.1.0",
         "jest": "^26.4.2",
